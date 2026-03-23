@@ -22,6 +22,7 @@ function updateTheme(isInitialLoad = false) {
             applyDynamicFontSize(res.g_fontSize || 16);
             createLoader();
             startObserver();
+            forceNativeDarkMode();
         } else {
             document.body.classList.remove('terminal-mode');
             const dynamicStyle = document.getElementById('terminal-code-styles');
@@ -65,16 +66,17 @@ function createLoader() {
     if (document.getElementById('terminal-loader')) return;
     const loader = document.createElement('div');
     loader.id = 'terminal-loader';
-    loader.innerHTML = `inicializando<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>`;
+    loader.innerHTML = `entrando<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>`;
     document.body.appendChild(loader);
 
     const checkReady = setInterval(() => {
-        if (document.querySelector('chat-window, rich-textarea, .input-area-container')) {
+        // Aguarda elementos de conteúdo real da conversa estarem presentes
+        if (document.querySelector('message-content, structured-content-container, .model-response-text')) {
             clearInterval(checkReady);
             setTimeout(() => {
                 loader.style.opacity = '0';
                 setTimeout(() => loader.remove(), 400);
-            }, 500);
+            }, 1000); // 1.0s extra para garantir que a transição seja suave e o conteúdo esteja renderizado
         }
     }, 500);
 }
@@ -120,5 +122,42 @@ function startObserver() {
 chrome.storage.onChanged.addListener((changes) => {
     if (changes.g_crtMode || changes.g_fontSize) updateTheme(false);
 });
+
+async function forceNativeDarkMode() {
+    // 1. Encontra e clica no botão de "Configurações e ajuda"
+    const settingsBtn = document.querySelector('[data-test-id="settings-and-help-button"] button, [data-test-id="expanded-button"][aria-label="Settings & help"]');
+    if (!settingsBtn) return;
+    
+    // Clica para abrir o menu base
+    settingsBtn.click();
+    
+    // Espera 150ms para o Angular renderizar o menu na tela
+    await new Promise(r => setTimeout(r, 150));
+    
+    // 2. Encontra e clica no botão "Tema"
+    const themeBtn = Array.from(document.querySelectorAll('.mat-mdc-menu-item')).find(el => el.textContent.includes('Tema'));
+    if (!themeBtn) {
+        document.body.click(); // Fecha se falhar
+        return;
+    }
+    themeBtn.click();
+    
+    // Espera 150ms para o submenu abrir
+    await new Promise(r => setTimeout(r, 150));
+    
+    // 3. Encontra a opção "Escuro" e clica se não estiver marcada
+    const darkBtn = Array.from(document.querySelectorAll('.mat-mdc-menu-item')).find(el => el.textContent.includes('Escuro'));
+    
+    if (darkBtn) {
+        if (darkBtn.getAttribute('aria-checked') !== 'true') {
+            darkBtn.click(); // Ativa o modo escuro
+            setTimeout(() => location.reload(), 500); // Recarrega para aplicar mudanças
+        } else {
+            document.body.click(); // Já está escuro, apenas fecha o menu
+        }
+    } else {
+        document.body.click(); // Fecha tudo caso dê erro
+    }
+}
 
 loadConfig();
