@@ -1,66 +1,127 @@
-/* --- 1. EFEITO CRT E LAYOUT EXPANDIDO --- */
-body.terminal-mode::after {
-    content: " " !important;
-    display: block !important;
-    position: fixed !important;
-    top: 0; left: 0; bottom: 0; right: 0 !important;
-    /* Camadas: Scanlines horizontais + Filtro Radial de Vidro */
-    background: 
-        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px),
-        radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%) !important;
-    z-index: 999999 !important;
-    pointer-events: none !important;
-    animation: terminal-flicker 0.12s infinite !important;
+/* --- 1. EFEITO CRT GLOBAL (FILTRO SUPERIOR) --- */
+body.terminal-mode::after { 
+    content: " " !important; display: block !important; position: fixed !important; 
+    top: 0 !important; left: 0 !important; bottom: 0 !important; right: 0 !important; 
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px) !important; 
+    z-index: 999999 !important; pointer-events: none !important; 
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.6) !important;
 }
+
+/* --- 2. FUNDOS PRETOS/CYAN ESCURO GLOBAIS --- */
+body.terminal-mode, body.terminal-mode main, body.terminal-mode .chat-window, 
+body.terminal-mode .main-content, body.terminal-mode header,
+body.terminal-mode .conversation-container, body.terminal-mode .response-container,
+body.terminal-mode message-content, body.terminal-mode .message-row { 
+    background-color: #021114 !important; 
+}
+
+/* --- 3. FONTES MONO E CORES (CYAN NEON) --- */
+body.terminal-mode * { 
+    font-family: 'Courier New', 'Consolas', monospace !important; 
+    color: #00e5ff !important; 
+    text-shadow: 0 0 2px rgba(0, 229, 255, 0.4) !important; 
+}
+
+/* FIX DE ÍCONES (Remover glow para legibilidade) */
+body.terminal-mode mat-icon, body.terminal-mode .google-symbols,
+body.terminal-mode bard-sidenav .mat-icon { 
+    font-family: 'Google Symbols' !important; text-shadow: none !important; color: #00e5ff !important;
+}
+
+/* --- 4. EXPANSÃO HORIZONTAL EXTREMA (98%) --- */
 body.terminal-mode .chat-window-content, body.terminal-mode .conversation-container, 
 body.terminal-mode .user-query-container, body.terminal-mode .response-container,
 body.terminal-mode .structured-content-container, body.terminal-mode .main-content { 
     max-width: 98% !important; width: 98% !important; margin-left: 0 !important; display: block !important;
 }
 
-/* --- 2. MIGRAÇÃO TOTAL PARA CIANO (#00e5ff) --- */
-body.terminal-mode, body.terminal-mode main, body.terminal-mode .chat-window, 
-body.terminal-mode .main-content, body.terminal-mode header,
-body.terminal-mode .conversation-container, body.terminal-mode .response-container,
-body.terminal-mode message-content, body.terminal-mode .message-row { background-color: #021114 !important; }
-
-body.terminal-mode *, body.terminal-mode span, body.terminal-mode p { 
-    color: #00e5ff !important; 
-    text-shadow: 0 0 2px rgba(0, 229, 255, 0.4) !important; 
-}
-
-/* --- 3. CORREÇÃO DE CÓDIGO E SPANS (REMOÇÃO DO VERDE) --- */
-body.terminal-mode pre, body.terminal-mode code, body.terminal-mode code *, 
-body.terminal-mode .hljs-keyword, body.terminal-mode .hljs-string, body.terminal-mode .hljs-comment { 
-    color: #00e5ff !important; 
-}
-body.terminal-mode .code-block, body.terminal-mode .formatted-code-block-internal-container { 
-    background-color: #010d10 !important; border: 1px solid rgba(0, 229, 255, 0.2) !important;
-}
-body.terminal-mode .code-block-decoration { background-color: #011a1f !important; color: #00e5ff !important; }
-
-/* --- 4. SIDEBAR E TOOLTIPS --- */
-body.terminal-mode bard-sidenav { width: 15px !important; transition: width 0.3s ease !important; overflow: hidden !important; z-index: 9999 !important; position: absolute !important; height: 100% !important; background-color: #021114 !important; }
-body.terminal-mode bard-sidenav:hover { width: 300px !important; border-right: 1px solid rgba(0, 229, 255, 0.3) !important; }
-body.terminal-mode bard-sidenav side-navigation-content { width: 280px !important; padding-right: 20px !important; display: block !important; opacity: 0 !important; transition: opacity 0.2s !important; }
-body.terminal-mode bard-sidenav:hover side-navigation-content { opacity: 1 !important; }
-body.terminal-mode .mat-mdc-tooltip .mdc-tooltip__surface, body.terminal-mode .mdc-tooltip__surface { background-color: #011a1f !important; color: #00e5ff !important; border: 1px solid #00e5ff !important; }
-
-/* --- 5. LOGO E MENU --- */
-body.terminal-mode side-nav-menu-button, 
-body.terminal-mode .main-menu-button { 
-    display: none !important; 
-}
-
+/* --- 5. LOGO (LINHA ÚNICA) --- */
 body.terminal-mode .bard-text { visibility: hidden !important; white-space: nowrap !important; }
-body.terminal-mode .bard-text::after { content: 'terminal code.' !important; visibility: visible !important; position: absolute; left: 0; top: 0; display: block; width: 300px !important; font-weight: bold !important; }
-
-/* --- 6. ANIMAÇÕES --- */
-@keyframes terminal-flicker {
-  0% { opacity: 0.58; }
-  5% { opacity: 0.54; }
-  10% { opacity: 0.59; }
-  15% { opacity: 0.55; }
-  20% { opacity: 0.58; }
-  100% { opacity: 0.57; }
+body.terminal-mode .bard-text::after { 
+    content: 'terminal code.' !important; visibility: visible !important; 
+    position: absolute; left: 0; top: 0; display: block;
+    width: 300px !important; white-space: nowrap !important; font-weight: bold !important;
 }
+
+/* --- 6. CAIXA DE INPUT --- */
+body.terminal-mode .input-area-container, body.terminal-mode .text-input-field { 
+    background-color: #011a1f !important; border: 1px solid #00e5ff !important; border-radius: 12px !important; 
+}
+body.terminal-mode [role='textbox'] { color: #00e5ff !important; }
+
+/* --- 7. SIDEBAR E CONVERSAS (Mapeamento do print image_14b6fe.png) --- */
+body.terminal-mode side-nav-menu-button, body.terminal-mode .main-menu-button { display: none !important; }
+
+body.terminal-mode bard-sidenav { 
+    width: 15px !important; transition: width 0.3s ease !important; overflow: hidden !important; 
+    z-index: 9999 !important; position: absolute !important; height: 100% !important;
+    background-color: #021114 !important; border-right: none !important;
+}
+body.terminal-mode bard-sidenav:hover { width: 300px !important; border-right: 1px solid rgba(0, 229, 255, 0.3) !important; }
+
+/* Conteúdo interno da sidebar */
+body.terminal-mode bard-sidenav side-navigation-content,
+body.terminal-mode bard-sidenav .ia-redesign,
+body.terminal-mode bard-sidenav .sidenav-with-history-container { 
+    width: 280px !important; min-width: 280px !important; 
+    padding-right: 20px !important;
+    display: block !important; opacity: 0 !important; transition: opacity 0.2s !important;
+}
+body.terminal-mode bard-sidenav:hover side-navigation-content,
+body.terminal-mode bard-sidenav:hover .ia-redesign,
+body.terminal-mode bard-sidenav:hover .sidenav-with-history-container { 
+    opacity: 1 !important; 
+}
+
+/* MELHORIA DOS COMPONENTES DE CONVERSA (com base no print) */
+body.terminal-mode .conversation, body.terminal-mode .mat-mdc-list-item-interactive {
+    background-color: transparent !important;
+    border-top: 1px solid transparent !important;
+    border-bottom: 1px solid transparent !important;
+    margin: 2px 0 !important;
+}
+
+/* Efeito de hover no console */
+body.terminal-mode .conversation:hover, body.terminal-mode .mat-mdc-list-item-interactive:hover {
+    background-color: #011a1f !important;
+    border-top: 1px solid #00e5ff44 !important;
+    border-bottom: 1px solid #00e5ff44 !important;
+}
+
+/* Títulos das conversas (Glow azul e mono) */
+body.terminal-mode .conversation-title, body.terminal-mode .history-item-text {
+    color: #00e5ff !important;
+    font-family: 'Courier New', monospace !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Ícones de Pin e Ações */
+body.terminal-mode .pin-icon, 
+body.terminal-mode .trailing-icon-container mat-icon,
+body.terminal-mode .conversation-actions-container mat-icon {
+    color: #00e5ff !important;
+    opacity: 1 !important;
+}
+
+/* --- 8. FIX TOOLTIP DEFINITIVO (Hardened Specificity) --- */
+/* Estilizando tooltips flutuantes globais */
+body.terminal-mode .mdc-tooltip__surface, 
+body.terminal-mode .mat-mdc-tooltip .mdc-tooltip__surface,
+body.terminal-mode [role='tooltip'] .mdc-tooltip__surface,
+.terminal-mode .mat-mdc-tooltip-panel .mdc-tooltip__surface {
+    background-color: #011a1f !important;
+    color: #00e5ff !important;
+    border: 1px solid #00e5ff !important;
+    border-radius: 4px !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+    text-shadow: none !important;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.2) !important;
+    padding: 6px 12px !important;
+}
+
+/* --- 9. BLOCOS DE CÓDIGO --- */
+body.terminal-mode .code-block { border: 1px solid rgba(0, 229, 255, 0.3) !important; background-color: #010d10 !important; }
+body.terminal-mode .formatted-code-block-internal-container { background-color: #010d10 !important; color: #00e5ff !important; }
