@@ -23,8 +23,10 @@ function updateTheme(isInitialLoad = false) {
             createLoader();
             startObserver();
             forceNativeDarkMode();
+            closeNativeMenus();
         } else {
             document.body.classList.remove('terminal-mode');
+            closeNativeMenus();
             const dynamicStyle = document.getElementById('terminal-code-styles');
             if (dynamicStyle) dynamicStyle.remove();
             const fontStyle = document.getElementById('terminal-font-size');
@@ -48,18 +50,16 @@ function applyDynamicFontSize(size) {
     let fontStyle = document.getElementById('terminal-font-size') || document.createElement('style');
     fontStyle.id = 'terminal-font-size';
     fontStyle.textContent = `
-        body.terminal-mode .model-response-text p, 
-        body.terminal-mode .model-response-text li, 
-        body.terminal-mode .query-text { 
+        body.terminal-mode *:not(mat-icon):not(.google-symbols) { 
             font-size: ${size}px !important; 
-        }
-        body.terminal-mode pre, 
-        body.terminal-mode code, 
-        body.terminal-mode .code-block { 
-            font-size: 13px !important; 
         }
     `;
     document.head.appendChild(fontStyle);
+}
+
+function closeNativeMenus() {
+    // Simula um clique no corpo para fechar menus suspensos do Angular/Gemini
+    document.body.click();
 }
 
 function createLoader() {
@@ -120,7 +120,11 @@ function startObserver() {
 }
 
 chrome.storage.onChanged.addListener((changes) => {
-    if (changes.g_crtMode || changes.g_fontSize) updateTheme(false);
+    if (changes.g_crtMode) {
+        updateTheme(false);
+    } else if (changes.g_fontSize) {
+        applyDynamicFontSize(changes.g_fontSize.newValue);
+    }
 });
 
 async function forceNativeDarkMode() {
