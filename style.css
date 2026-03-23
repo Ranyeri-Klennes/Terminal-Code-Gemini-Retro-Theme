@@ -4,10 +4,13 @@ body.terminal-mode::after {
     display: block !important;
     position: fixed !important;
     top: 0; left: 0; bottom: 0; right: 0 !important;
-    /* Camadas: Scanlines horizontais + Filtro Radial de Vidro */
+    /* Camadas: Scanlines horizontais + Filtro Radial de Vidro + Brilho de Canto */
     background: 
         repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px),
-        radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%) !important;
+        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%),
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)) !important;
+    background-size: 100% 100%, 100% 100%, 100% 2px, 3px 100% !important;
     z-index: 999999 !important;
     pointer-events: none !important;
     animation: terminal-flicker 0.12s infinite !important;
@@ -38,19 +41,80 @@ body.terminal-mode::after {
     50% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+/* --- 2. TIPOGRAFIA GLOBAL TERMINAL (NEON) --- */
+body.terminal-mode, 
+body.terminal-mode p, 
+body.terminal-mode li, 
+body.terminal-mode span, 
+body.terminal-mode div:not(.bot-logo-text),
+body.terminal-mode h1, 
+body.terminal-mode h2, 
+body.terminal-mode h3, 
+body.terminal-mode a,
+body.terminal-mode button,
+body.terminal-mode .model-response-text,
+body.terminal-mode .query-text,
+body.terminal-mode .markdown-content {
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace !important;
+    /* Efeito Neon Multi-camada */
+    text-shadow: 
+        0 0 2px #00e5ff,
+        0 0 5px rgba(0, 229, 255, 0.5),
+        0 0 10px rgba(0, 229, 255, 0.2) !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.5px !important;
+    -webkit-font-smoothing: none !important;
+}
+
+/* Remover brilho de ícones específicos e logos */
+body.terminal-mode .bot-logo-text, 
+body.terminal-mode mat-icon, 
+body.terminal-mode .google-symbols {
+    text-shadow: none !important;
+}
+
+body.terminal-mode h1, body.terminal-mode h2, body.terminal-mode h3 {
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 15px !important;
+    color: #00e5ff !important;
+    text-shadow: 0 0 8px #00e5ff, 0 0 15px rgba(0, 229, 255, 0.4) !important;
+}
+
+body.terminal-mode a {
+    text-decoration: underline !important;
+    text-underline-offset: 4px !important;
+}
 body.terminal-mode .chat-window-content, body.terminal-mode .conversation-container, 
 body.terminal-mode .user-query-container, body.terminal-mode .response-container,
 body.terminal-mode .structured-content-container, body.terminal-mode .main-content { 
     max-width: 98% !important; width: 98% !important; margin-left: 0 !important; display: block !important;
 }
 
-/* --- 2. MIGRAÇÃO TOTAL PARA CIANO (#00e5ff) --- */
+/* Bolha de Pergunta do Usuário */
+body.terminal-mode .user-query-bubble-with-background {
+    background-color: #011a1f !important;
+    border: 1px solid rgba(0, 229, 255, 0.5) !important;
+    border-radius: 8px !important;
+    padding: 12px 20px !important;
+    margin-bottom: 15px !important;
+    display: inline-block !important;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.1) !important;
+}
+
+/* --- 3. BACKGROUND GLOBAL E EFEITOS DE FUNDO --- */
 body.terminal-mode, body.terminal-mode main, body.terminal-mode .chat-window, 
 body.terminal-mode .main-content, body.terminal-mode header,
 body.terminal-mode .conversation-container, body.terminal-mode .response-container,
 body.terminal-mode message-content, body.terminal-mode .message-row,
 body.terminal-mode .input-area-container, body.terminal-mode .input-area,
-body.terminal-mode .text-input-field { background-color: #021114 !important; }
+body.terminal-mode .text-input-field { 
+    background-color: #021114 !important; 
+    background-image: 
+        radial-gradient(circle at center, rgba(0, 229, 255, 0.03) 0%, transparent 70%),
+        repeating-linear-gradient(90deg, rgba(0, 229, 255, 0.01) 0px, rgba(0, 229, 255, 0.01) 1px, transparent 1px, transparent 100px) !important;
+}
 
 body.terminal-mode *, body.terminal-mode span, body.terminal-mode p, body.terminal-mode div[role="textbox"] { 
     color: #00e5ff !important; 
@@ -75,10 +139,38 @@ body.terminal-mode .input-area-container {
 body.terminal-mode .code-block-decoration { background-color: #011a1f !important; color: #00e5ff !important; }
 
 /* --- 4. SIDEBAR E TOOLTIPS --- */
-body.terminal-mode bard-sidenav { width: 15px !important; transition: width 0.3s ease !important; overflow: hidden !important; z-index: 9999 !important; position: absolute !important; height: 100% !important; background-color: #021114 !important; }
-body.terminal-mode bard-sidenav:hover { width: 300px !important; border-right: 1px solid rgba(0, 229, 255, 0.3) !important; }
-body.terminal-mode bard-sidenav side-navigation-content { width: 280px !important; padding-right: 20px !important; display: block !important; opacity: 0 !important; transition: opacity 0.2s !important; }
-body.terminal-mode bard-sidenav:hover side-navigation-content { opacity: 1 !important; }
+body.terminal-mode bard-sidenav { 
+    width: 46px !important; 
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease !important; 
+    overflow: hidden !important; 
+    z-index: 9999 !important; 
+    position: absolute !important; 
+    height: 100% !important; 
+    background-color: transparent !important; 
+}
+
+body.terminal-mode bard-sidenav * {
+    text-decoration: none !important;
+}
+
+body.terminal-mode bard-sidenav:hover { 
+    width: 360px !important; 
+    background-color: #021114 !important; 
+    border-right: 1px solid rgba(0, 229, 255, 0.3) !important; 
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.terminal-mode bard-sidenav side-navigation-content { 
+    width: 340px !important; 
+    padding-right: 20px !important; 
+    display: block !important; 
+    opacity: 0 !important; 
+    transition: opacity 0.3s ease !important; 
+}
+
+body.terminal-mode bard-sidenav:hover side-navigation-content { 
+    opacity: 1 !important; 
+}
 body.terminal-mode .mat-mdc-tooltip .mdc-tooltip__surface, body.terminal-mode .mdc-tooltip__surface { background-color: #011a1f !important; color: #00e5ff !important; border: 1px solid #00e5ff !important; }
 
 /* --- 5. LOGO E MENU --- */
