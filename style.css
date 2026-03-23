@@ -1,0 +1,66 @@
+/* --- 1. EFEITO CRT E LAYOUT EXPANDIDO --- */
+body.terminal-mode::after {
+    content: " " !important;
+    display: block !important;
+    position: fixed !important;
+    top: 0; left: 0; bottom: 0; right: 0 !important;
+    /* Camadas: Scanlines horizontais + Filtro Radial de Vidro */
+    background: 
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px),
+        radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%) !important;
+    z-index: 999999 !important;
+    pointer-events: none !important;
+    animation: terminal-flicker 0.12s infinite !important;
+}
+body.terminal-mode .chat-window-content, body.terminal-mode .conversation-container, 
+body.terminal-mode .user-query-container, body.terminal-mode .response-container,
+body.terminal-mode .structured-content-container, body.terminal-mode .main-content { 
+    max-width: 98% !important; width: 98% !important; margin-left: 0 !important; display: block !important;
+}
+
+/* --- 2. MIGRAÇÃO TOTAL PARA CIANO (#00e5ff) --- */
+body.terminal-mode, body.terminal-mode main, body.terminal-mode .chat-window, 
+body.terminal-mode .main-content, body.terminal-mode header,
+body.terminal-mode .conversation-container, body.terminal-mode .response-container,
+body.terminal-mode message-content, body.terminal-mode .message-row { background-color: #021114 !important; }
+
+body.terminal-mode *, body.terminal-mode span, body.terminal-mode p { 
+    color: #00e5ff !important; 
+    text-shadow: 0 0 2px rgba(0, 229, 255, 0.4) !important; 
+}
+
+/* --- 3. CORREÇÃO DE CÓDIGO E SPANS (REMOÇÃO DO VERDE) --- */
+body.terminal-mode pre, body.terminal-mode code, body.terminal-mode code *, 
+body.terminal-mode .hljs-keyword, body.terminal-mode .hljs-string, body.terminal-mode .hljs-comment { 
+    color: #00e5ff !important; 
+}
+body.terminal-mode .code-block, body.terminal-mode .formatted-code-block-internal-container { 
+    background-color: #010d10 !important; border: 1px solid rgba(0, 229, 255, 0.2) !important;
+}
+body.terminal-mode .code-block-decoration { background-color: #011a1f !important; color: #00e5ff !important; }
+
+/* --- 4. SIDEBAR E TOOLTIPS --- */
+body.terminal-mode bard-sidenav { width: 15px !important; transition: width 0.3s ease !important; overflow: hidden !important; z-index: 9999 !important; position: absolute !important; height: 100% !important; background-color: #021114 !important; }
+body.terminal-mode bard-sidenav:hover { width: 300px !important; border-right: 1px solid rgba(0, 229, 255, 0.3) !important; }
+body.terminal-mode bard-sidenav side-navigation-content { width: 280px !important; padding-right: 20px !important; display: block !important; opacity: 0 !important; transition: opacity 0.2s !important; }
+body.terminal-mode bard-sidenav:hover side-navigation-content { opacity: 1 !important; }
+body.terminal-mode .mat-mdc-tooltip .mdc-tooltip__surface, body.terminal-mode .mdc-tooltip__surface { background-color: #011a1f !important; color: #00e5ff !important; border: 1px solid #00e5ff !important; }
+
+/* --- 5. LOGO E MENU --- */
+body.terminal-mode side-nav-menu-button, 
+body.terminal-mode .main-menu-button { 
+    display: none !important; 
+}
+
+body.terminal-mode .bard-text { visibility: hidden !important; white-space: nowrap !important; }
+body.terminal-mode .bard-text::after { content: 'terminal code.' !important; visibility: visible !important; position: absolute; left: 0; top: 0; display: block; width: 300px !important; font-weight: bold !important; }
+
+/* --- 6. ANIMAÇÕES --- */
+@keyframes terminal-flicker {
+  0% { opacity: 0.58; }
+  5% { opacity: 0.54; }
+  10% { opacity: 0.59; }
+  15% { opacity: 0.55; }
+  20% { opacity: 0.58; }
+  100% { opacity: 0.57; }
+}

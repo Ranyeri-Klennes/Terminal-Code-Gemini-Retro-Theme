@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      width: 250px;
+      padding: 10px;
+      margin: 0;
+      background: #1e1f22;
+    }
+
+    .gemini-ext-menu {
+      display: flex;
+      flex-direction: column;
+      position: static;
+      box-shadow: none;
+      border: none;
+      padding: 0;
+    }
+
+    .gemini-ext-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #00e5ff;
+      font-family: monospace;
+      font-size: 14px;
+      margin: 10px 0;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #00e5ff;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(20px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="gemini-ext-menu">
+    <div class="gemini-ext-row"
+      style="justify-content: center; font-size: 16px; font-weight: bold; border-bottom: 1px solid #00e5ff; padding-bottom: 10px; margin-bottom: 15px;">
+      TERMINAL CODE
+    </div>
+    <div class="gemini-ext-row">
+      <span>Modo Terminal</span>
+      <label class="switch">
+        <input type="checkbox" id="ext-crt-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="gemini-ext-row">
+      <span>Fonte</span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button id="btn-font-minus" style="background:#1e1f22; color:#00e5ff; border:1px solid #00e5ff; cursor:pointer; width: 24px;">-</button>
+        <span id="font-size-display">16px</span>
+        <button id="btn-font-plus" style="background:#1e1f22; color:#00e5ff; border:1px solid #00e5ff; cursor:pointer; width: 24px;">+</button>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+
+</html>

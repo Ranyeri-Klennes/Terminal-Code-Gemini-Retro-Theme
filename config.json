@@ -1,0 +1,11 @@
+{
+  "selectors": {
+    ".model-response-text p, .model-response-text li, .model-response, .markdown-content, code, span": "#00e5ff",
+    ".user-message, .user-query-container, .query-text": "#00ccdd",
+    "h1, h2, h3, .title, .bot-name, .conversation-title": "#00e5ff",
+    "mat-icon, .google-symbols, svg": "#00e5ff",
+    "a, .mat-mdc-list-item": "#00e5ff",
+    "textarea, [role='textbox']": "#00e5ff",
+    ".sidebar-item-active, .selected": "#004455"
+  }
+}
