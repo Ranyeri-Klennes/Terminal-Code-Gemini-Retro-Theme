@@ -1,0 +1,11 @@
+{
+  "selectors": {
+    "h1, h2, h3, .title, .bot-name, .conversation-title, .history-item-text": "#00e5ff",
+    "p, li, .model-response-text, .structured-content-container": "#00e5ff",
+    "textarea, [role='textbox']": "#00ffcc",
+    "pre, code, .code-block": "#00e5ff",
+    ".sidebar-item-active, .selected": "#011a1f",
+    "mat-icon, .google-symbols": "#00e5ff",
+    "hr, .separator": "#00e5ff33"
+  }
+}

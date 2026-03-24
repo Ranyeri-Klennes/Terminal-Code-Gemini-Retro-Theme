@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal Code</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="terminal-panel">
+    <header>
+      <div class="brand">TERMINAL_CODE</div>
+    </header>
+    
+    <div class="control-group">
+      <div class="control-row">
+        <span class="label">Status</span>
+        <button id="btn-theme-toggle" class="retro-btn">[OFF]</button>
+      </div>
+
+      <div class="control-row">
+        <span class="label">Font Scale</span>
+        <div class="font-stepper">
+          <button id="btn-font-minus" class="step-btn">−</button>
+          <span id="font-size-display">16px</span>
+          <button id="btn-font-plus" class="step-btn">+</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>system_ready_v1.4</footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
