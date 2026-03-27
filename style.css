@@ -88,7 +88,8 @@ body.terminal-mode a {
 }
 body.terminal-mode .chat-window-content, body.terminal-mode .conversation-container, 
 body.terminal-mode .user-query-container, body.terminal-mode .response-container,
-body.terminal-mode .structured-content-container, body.terminal-mode .main-content { 
+body.terminal-mode .structured-content-container, body.terminal-mode .main-content,
+body.terminal-mode user-query { 
     max-width: 98% !important; width: 98% !important; margin-left: 0 !important; display: block !important;
 }
 
@@ -116,6 +117,36 @@ body.terminal-mode .text-input-field {
         repeating-linear-gradient(90deg, rgba(0, 229, 255, 0.01) 0px, rgba(0, 229, 255, 0.01) 1px, transparent 1px, transparent 100px) !important;
 }
 
+/* 1. Mantém a caixa de texto visível, mas remove qualquer fundo ou sombra atrelada a ela */
+body.terminal-mode input-container.input-gradient,
+body.terminal-mode .input-gradient,
+body.terminal-mode .input-box-shadow {
+    background: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* 2. Oculta o "pseudo-elemento" invisível que o Gemini usa para desenhar a linha/fade acima do chat */
+body.terminal-mode .input-gradient::before,
+body.terminal-mode .input-gradient::after {
+    display: none !important;
+    opacity: 0 !important;
+}
+
+/* 3. Oculta os outros elementos de sombra/desfoque da página, EXCETO a caixa de texto */
+body.terminal-mode .blur-bg,
+body.terminal-mode [class*="gradient"]:not(.input-gradient),
+body.terminal-mode [class*="blur"]:not(.blur-bg),
+body.terminal-mode [class*="shadow-container"],
+body.terminal-mode [class*="backdrop"],
+body.terminal-mode [class*="scrim"],
+body.terminal-mode .top-gradient,
+body.terminal-mode .bottom-gradient,
+body.terminal-mode .autosuggest-scrim {
+    display: none !important;
+}
+
 body.terminal-mode *, body.terminal-mode span, body.terminal-mode p, body.terminal-mode div[role="textbox"] { 
     color: #00e5ff !important; 
     text-shadow: 0 0 2px rgba(0, 229, 255, 0.4) !important; 
@@ -129,18 +160,34 @@ body.terminal-mode .hljs-keyword, body.terminal-mode .hljs-string, body.terminal
 body.terminal-mode .code-block, body.terminal-mode .formatted-code-block-internal-container,
 body.terminal-mode .input-area-container, body.terminal-mode .text-input-field, body.terminal-mode .input-area { 
     background-color: #011a1f !important; 
-    border: 1px solid rgba(0, 229, 255, 0.3) !important;
+    border: none !important;
+    box-shadow: none !important;
     border-radius: 12px !important;
 }
 body.terminal-mode .input-area-container {
+    background-color: #021114 !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
     padding: 8px !important;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.1) !important;
     margin-bottom: 30px !important;
 }
 body.terminal-mode .code-block-decoration { background-color: #011a1f !important; color: #00e5ff !important; }
 
 /* --- 4. SIDEBAR E TOOLTIPS (LAYOUT NATIVO) --- */
+body.terminal-mode {
+    --bard-sidenav-open-width: 256px !important;
+}
+
+body.terminal-mode bard-sidenav a {
+    text-decoration: none !important;
+}
+
 body.terminal-mode bard-sidenav,
+body.terminal-mode side-navigation-v2 {
+    /* Largura original restaurada */
+}
+
 body.terminal-mode side-navigation-content,
 body.terminal-mode .sidenav-with-history-container,
 body.terminal-mode .overflow-container,
@@ -196,4 +243,13 @@ body.terminal-mode .bard-text::after { content: 'terminal code.' !important; vis
   15% { opacity: 0.55; }
   20% { opacity: 0.58; }
   100% { opacity: 0.57; }
+}
+
+/* Ocultar degradês de rolagem nativos do Gemini */
+body.terminal-mode .top-gradient-container,
+body.terminal-mode .top-gradient,
+body.terminal-mode .bottom-gradient-container,
+body.terminal-mode .bottom-gradient {
+    display: none !important;
+    background: none !important;
 }
