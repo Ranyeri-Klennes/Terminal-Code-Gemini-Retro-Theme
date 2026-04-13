@@ -79,14 +79,16 @@ function createLoader() {
     loader.innerHTML = `entrando<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>`;
     document.body.appendChild(loader);
 
+    let attempts = 0;
     const checkReady = setInterval(() => {
-        // Aguarda elementos de conteúdo real da conversa estarem presentes
-        if (document.querySelector('message-content, structured-content-container, .model-response-text')) {
+        attempts++;
+        // Aguarda elementos de conteúdo real da conversa ou o estado inicial (zero state)
+        if (document.querySelector('message-content, structured-content-container, .model-response-text, modular-zero-state, .zero-state-container') || attempts > 20) {
             clearInterval(checkReady);
             setTimeout(() => {
                 loader.style.opacity = '0';
                 setTimeout(() => loader.remove(), 400);
-            }, 1000); // 1.0s extra para garantir que a transição seja suave e o conteúdo esteja renderizado
+            }, 500); // Reduzido para 0.5s para ser mais ágil
         }
     }, 500);
 }
