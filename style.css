@@ -105,8 +105,6 @@ body.full-width-mode .chat-history-scroll-container,
 body.full-width-mode .chat-history { 
     max-width: 98% !important; 
     width: 98% !important; 
-    margin-left: 0 !important; 
-    display: block !important;
 }
 
 body.terminal-mode .markdown-main-panel, 

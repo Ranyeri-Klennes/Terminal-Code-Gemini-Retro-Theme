@@ -23,8 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
     themeBtn.addEventListener('click', () => {
         chrome.storage.local.get(['g_crtMode'], (res) => {
             const nextState = !(res.g_crtMode || false);
-            chrome.storage.local.set({ g_crtMode: nextState }, () => {
+            // Se ativar um, desativa o outro
+            const updates = { g_crtMode: nextState };
+            if (nextState) updates.g_fullWidth = false;
+            
+            chrome.storage.local.set(updates, () => {
                 updateThemeButton(nextState);
+                if (nextState) updateFullWidthButton(false);
             });
         });
     });
@@ -33,8 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
     fullWidthBtn.addEventListener('click', () => {
         chrome.storage.local.get(['g_fullWidth'], (res) => {
             const nextState = !(res.g_fullWidth || false);
-            chrome.storage.local.set({ g_fullWidth: nextState }, () => {
+            // Se ativar um, desativa o outro
+            const updates = { g_fullWidth: nextState };
+            if (nextState) updates.g_crtMode = false;
+
+            chrome.storage.local.set(updates, () => {
                 updateFullWidthButton(nextState);
+                if (nextState) updateThemeButton(false);
             });
         });
     });
