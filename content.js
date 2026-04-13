@@ -12,12 +12,17 @@ async function loadConfig() {
 }
 
 function updateTheme(isInitialLoad = false) {
-    chrome.storage.local.get(['g_crtMode', 'g_fontSize'], (res) => {
-        const isEnabled = res.g_crtMode !== false;
-        const hasTerminalClass = document.body.classList.contains('terminal-mode');
+    chrome.storage.local.get(['g_crtMode', 'g_fullWidth', 'g_fontSize'], (res) => {
+        const isCrtEnabled = res.g_crtMode !== false;
+        const isFullWidthEnabled = res.g_fullWidth === true;
+        
+        const hadAnyClass = document.body.classList.contains('terminal-mode') || document.body.classList.contains('full-width-mode');
 
-        if (isEnabled) {
-            document.body.classList.add('terminal-mode');
+        // Aplica as classes de forma independente
+        document.body.classList.toggle('terminal-mode', isCrtEnabled);
+        document.body.classList.toggle('full-width-mode', isFullWidthEnabled);
+
+        if (isCrtEnabled) {
             injectDynamicStyles();
             applyDynamicFontSize(res.g_fontSize || 16);
             createLoader();
@@ -25,16 +30,11 @@ function updateTheme(isInitialLoad = false) {
             forceNativeDarkMode();
             closeNativeMenus();
         } else {
-            document.body.classList.remove('terminal-mode');
-            closeNativeMenus();
-            const dynamicStyle = document.getElementById('terminal-code-styles');
-            if (dynamicStyle) dynamicStyle.remove();
-            const fontStyle = document.getElementById('terminal-font-size');
-            if (fontStyle) fontStyle.remove();
-
-            // Só recarrega se não for carga inicial e se a classe estava presente (desativação manual)
-            if (!isInitialLoad && hasTerminalClass) {
-                // Safeguard contra loops infinitos
+            cleanupRetroTheme();
+            
+            // Só recarrega se não for carga inicial e se alguma classe estava presente (desativação manual)
+            // E se agora não houver nada ativo
+            if (!isInitialLoad && hadAnyClass && !isCrtEnabled && !isFullWidthEnabled) {
                 const lastReload = sessionStorage.getItem('terminal_last_reload');
                 const now = Date.now();
                 if (!lastReload || (now - parseInt(lastReload)) > 3000) {
@@ -45,6 +45,16 @@ function updateTheme(isInitialLoad = false) {
         }
     });
 }
+
+
+function cleanupRetroTheme() {
+    closeNativeMenus();
+    const dynamicStyle = document.getElementById('terminal-code-styles');
+    if (dynamicStyle) dynamicStyle.remove();
+    const fontStyle = document.getElementById('terminal-font-size');
+    if (fontStyle) fontStyle.remove();
+}
+
 
 function applyDynamicFontSize(size) {
     let fontStyle = document.getElementById('terminal-font-size') || document.createElement('style');
@@ -120,12 +130,13 @@ function startObserver() {
 }
 
 chrome.storage.onChanged.addListener((changes) => {
-    if (changes.g_crtMode) {
+    if (changes.g_crtMode || changes.g_fullWidth) {
         updateTheme(false);
     } else if (changes.g_fontSize) {
         applyDynamicFontSize(changes.g_fontSize.newValue);
     }
 });
+
 
 async function forceNativeDarkMode() {
     // 1. Encontra e clica no botão de "Configurações e ajuda"
