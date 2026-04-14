@@ -107,7 +107,30 @@ body.full-width-mode .chat-history {
     max-width: 98% !important; 
     width: 98% !important; 
     margin-left: 0 !important; 
-    display: block !important;
+}
+
+/* Garante que o scroll funcione nos containers principais */
+body.terminal-mode .chat-history-scroll-container,
+body.terminal-mode .conversation-container,
+body.full-width-mode .chat-history-scroll-container,
+body.full-width-mode .conversation-container {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+}
+
+/* Estilização Terminal para Scrollbars */
+body.terminal-mode ::-webkit-scrollbar {
+    width: 10px !important;
+    background: #021114 !important;
+}
+body.terminal-mode ::-webkit-scrollbar-thumb {
+    background: #00e5ff !important;
+    border: 2px solid #021114 !important;
+    box-shadow: 0 0 5px #00e5ff !important;
+}
+body.terminal-mode ::-webkit-scrollbar-corner {
+    background: #021114 !important;
 }
 
 body.terminal-mode .markdown-main-panel, 
