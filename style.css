@@ -86,12 +86,51 @@ body.terminal-mode a {
     text-decoration: underline !important;
     text-underline-offset: 4px !important;
 }
-body.terminal-mode .chat-window-content, body.terminal-mode .conversation-container, 
-body.terminal-mode .user-query-container, body.terminal-mode .response-container,
-body.terminal-mode .structured-content-container, body.terminal-mode .main-content,
-body.terminal-mode user-query { 
-    max-width: 98% !important; width: 98% !important; margin-left: 0 !important; display: block !important;
+/* --- 2.1 LAYOUT DE LARGURA TOTAL (OPCIONAL OU INTEGRADO AO RETRO) --- */
+body.terminal-mode .chat-window-content, 
+body.terminal-mode .conversation-container, 
+body.terminal-mode .user-query-container, 
+body.terminal-mode .response-container,
+body.terminal-mode .structured-content-container, 
+body.terminal-mode .main-content,
+body.terminal-mode .chat-history-scroll-container,
+body.terminal-mode .chat-history,
+body.terminal-mode user-query,
+body.full-width-mode .chat-window-content, 
+body.full-width-mode .conversation-container, 
+body.full-width-mode .user-query-container, 
+body.full-width-mode .response-container,
+body.full-width-mode .structured-content-container, 
+body.full-width-mode .main-content,
+body.full-width-mode .chat-history-scroll-container,
+body.full-width-mode .chat-history { 
+    max-width: 98% !important; 
+    width: 98% !important; 
+    margin-left: 0 !important; 
+    display: block !important;
 }
+
+body.terminal-mode .markdown-main-panel, 
+body.terminal-mode .model-response-text,
+body.terminal-mode message-content,
+body.full-width-mode .markdown-main-panel, 
+body.full-width-mode .model-response-text,
+body.full-width-mode message-content {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+body.terminal-mode code-block, 
+body.terminal-mode pre, 
+body.terminal-mode .code-block,
+body.full-width-mode code-block, 
+body.full-width-mode pre, 
+body.full-width-mode .code-block {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+
 
 /* Bolha de Pergunta do Usuário */
 body.terminal-mode .user-query-bubble-with-background {
