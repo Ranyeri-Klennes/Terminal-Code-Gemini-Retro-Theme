@@ -419,34 +419,37 @@ body.terminal-mode .hljs-punctuation {
     color: #00e5ff !important;
 }
 
-/* --- 7. TABELAS (RESPONSIVAS - 100% LARGURA SEM SCROLL) --- */
+/* --- 7. TABELAS (EXPANSÃO HORIZONTAL TOTAL E SEM ROLAGEM NECESSÁRIA) --- */
+body.terminal-mode table-block,
+body.terminal-mode .table-block,
+body.terminal-mode .table-content,
+body.terminal-mode .markdown-content table-block,
+body.terminal-mode .enable-luminous-table-block,
+body.terminal-mode .markdown-content > div:has(table),
+body.terminal-mode .structured-content-container,
+body.terminal-mode div[data-path-to-node]:has(table),
+body.terminal-mode message-content:has(table) {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+}
+
 body.terminal-mode table,
 body.terminal-mode .markdown-content table,
-body.terminal-mode [data-path-to-node] table {
+body.terminal-mode [data-path-to-node] table,
+body.terminal-mode .table-content table {
     width: 100% !important;
     max-width: 100% !important;
     table-layout: auto !important;
     border-collapse: separate !important;
     border-spacing: 0 !important;
-    margin: 20px 0 !important;
+    margin: 16px 0 !important;
     background-color: #011417 !important;
     border: 1px solid rgba(0, 229, 255, 0.4) !important;
     border-radius: 8px !important;
     box-shadow: 0 0 15px rgba(0, 229, 255, 0.08) !important;
-    box-sizing: border-box !important;
     display: table !important;
-}
-
-/* Containers da resposta expandidos a 100% para acomodar a tabela toda */
-body.terminal-mode .markdown-content > div:has(table),
-body.terminal-mode .structured-content-container,
-body.terminal-mode div[data-path-to-node]:has(table),
-body.terminal-mode message-content:has(table),
-body.terminal-mode .markdown-content,
-body.terminal-mode .model-response-text {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow-x: visible !important;
 }
 
 body.terminal-mode th {
@@ -455,13 +458,14 @@ body.terminal-mode th {
     font-weight: bold !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
-    padding: 12px 14px !important;
+    padding: 10px 12px !important;
     border-bottom: 2px solid rgba(0, 229, 255, 0.5) !important;
     border-right: 1px solid rgba(0, 229, 255, 0.15) !important;
     text-align: left !important;
     white-space: normal !important;
-    word-break: break-word !important;
-    text-shadow: 0 0 5px rgba(0, 229, 255, 0.4) !important;
+    word-break: normal !important;
+    text-shadow: 0 0 4px rgba(0, 229, 255, 0.4) !important;
+    font-size: 12px !important;
 }
 
 body.terminal-mode th:last-child {
@@ -469,20 +473,22 @@ body.terminal-mode th:last-child {
 }
 
 body.terminal-mode td {
-    padding: 12px 14px !important;
+    padding: 10px 12px !important;
     border-bottom: 1px solid rgba(0, 229, 255, 0.15) !important;
     border-right: 1px solid rgba(0, 229, 255, 0.15) !important;
     color: #80f2ff !important;
     line-height: 1.5 !important;
     vertical-align: top !important;
     text-shadow: none !important;
-    word-break: break-word !important;
+    word-break: normal !important;
     white-space: normal !important;
-    min-width: 0 !important;
+    min-width: unset !important;
+    font-size: 12.5px !important;
 }
 
 body.terminal-mode td:last-child {
     border-right: none !important;
+    min-width: unset !important;
 }
 
 body.terminal-mode tr:last-child td {
