@@ -276,7 +276,7 @@ body.terminal-mode .beta-badge {
 
 /* Seções Expansíveis (Notebooks, Recentes, etc) */
 body.terminal-mode .expandable-section-header {
-    padding: 8px 12px !important;
+    padding: 6px 12px !important;
 }
 body.terminal-mode .expandable-section-title {
     color: #00e5ff !important;
@@ -285,6 +285,47 @@ body.terminal-mode .expandable-section-title {
     letter-spacing: 1px !important;
     font-size: 11px !important;
     opacity: 0.8 !important;
+}
+
+/* Otimização de Responsividade e Espaçamento da Seção de Notebooks */
+body.terminal-mode expandable-section[data-test-id="notebooks-expandable-section"] .expandable-section-content-inner,
+body.terminal-mode project-sidenav-list,
+body.terminal-mode project-sidenav-list .mat-mdc-nav-list {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+body.terminal-mode project-sidenav-list-item,
+body.terminal-mode project-sidenav-list gem-nav-list-item {
+    margin: 1px 2px !important;
+    padding: 0 !important;
+    display: block !important;
+}
+
+body.terminal-mode project-sidenav-list a.mat-mdc-list-item,
+body.terminal-mode project-sidenav-list-item a.mat-mdc-list-item {
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+}
+
+body.terminal-mode project-sidenav-list .leading-icon-container,
+body.terminal-mode project-sidenav-list-item .leading-icon-container {
+    margin-right: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+body.terminal-mode project-sidenav-list .title-text,
+body.terminal-mode project-sidenav-list-item .title-text {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
 /* Divider de Seção */
