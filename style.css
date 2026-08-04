@@ -405,9 +405,29 @@ body.terminal-mode .header-formatted button:hover {
     color: #ffffff !important;
 }
 
-/* Área Interna de Código */
+/* Code Inline (dentro de parágrafos e listas) */
+body.terminal-mode :not(pre) > code,
+body.terminal-mode p code,
+body.terminal-mode li code,
+body.terminal-mode span code {
+    background-color: #011a1f !important;
+    border: 1px solid rgba(0, 229, 255, 0.3) !important;
+    border-radius: 4px !important;
+    padding: 1px 5px !important;
+    margin: 0 2px !important;
+    font-family: 'Consolas', 'Fira Code', 'Courier New', monospace !important;
+    font-size: 0.9em !important;
+    line-height: normal !important;
+    white-space: normal !important;
+    display: inline-block !important;
+    vertical-align: baseline !important;
+    color: #00ffcc !important;
+    box-shadow: none !important;
+}
+
+/* Área Interna de Código em Bloco */
 body.terminal-mode pre,
-body.terminal-mode code,
+body.terminal-mode pre code,
 body.terminal-mode .code-container {
     background-color: #011417 !important;
     font-family: 'Consolas', 'Fira Code', 'Courier New', monospace !important;
