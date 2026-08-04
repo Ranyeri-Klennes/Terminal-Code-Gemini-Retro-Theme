@@ -1,20 +1,19 @@
-/* --- 1. EFEITO CRT E LAYOUT EXPANDIDO --- */
+/* --- 1. EFEITO CRT & VIDRO GLASSMORPHISM RETRO TV --- */
 body.terminal-mode::after {
     content: " " !important;
     display: block !important;
     position: fixed !important;
     top: 0; left: 0; bottom: 0; right: 0 !important;
-    /* Camadas: Scanlines horizontais + Filtro Radial de Vidro + Brilho de Canto */
+    /* Scanlines horizontais + Curvatura de vidro CRT + Glow de Fósforo nas bordas */
     background: 
-        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px),
-        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.6) 100%),
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-        linear-gradient(90deg, rgba(66, 246, 57, 0.03), rgba(151, 244, 253, 0.02), rgba(177, 49, 36, 0.03)) !important;
-    background-size: 100% 100%, 100% 100%, 100% 2px, 3px 100% !important;
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0px, rgba(0, 0, 0, 0.18) 1px, transparent 1px, transparent 2px),
+        radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.8) 100%),
+        linear-gradient(90deg, rgba(66, 246, 57, 0.02), rgba(151, 244, 253, 0.015), rgba(177, 49, 36, 0.02)) !important;
+    background-size: 100% 100%, 100% 100%, 3px 100% !important;
     z-index: 999999 !important;
     pointer-events: none !important;
-    animation: terminal-flicker 0.12s infinite !important;
-    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.9) !important;
+    animation: terminal-flicker 0.15s infinite !important;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.95), inset 0 0 35px rgba(151, 244, 253, 0.05) !important;
 }
 
 #terminal-loader {
@@ -48,7 +47,7 @@ body.terminal-mode::after {
 body.terminal-mode, 
 body.terminal-mode p, 
 body.terminal-mode li, 
-body.terminal-mode span, 
+body.terminal-mode span:not(code), 
 body.terminal-mode div:not(.bot-logo-text),
 body.terminal-mode h1, 
 body.terminal-mode h2, 
@@ -129,18 +128,21 @@ body.full-width-mode .code-block {
     max-width: 100% !important;
 }
 
-/* Bolha de Pergunta do Usuário */
-body.terminal-mode .user-query-bubble-with-background {
-    background-color: #030a0d !important;
-    border: 1px solid rgba(151, 244, 253, 0.4) !important;
-    border-radius: 8px !important;
+/* Bolha de Pergunta do Usuário (Efeito Vidro Translucido) */
+body.terminal-mode .user-query-bubble-with-background,
+body.terminal-mode .user-query-container {
+    background: rgba(3, 15, 20, 0.75) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(151, 244, 253, 0.35) !important;
+    border-radius: 10px !important;
     padding: 12px 20px !important;
     margin-bottom: 15px !important;
     display: inline-block !important;
-    box-shadow: 0 0 10px rgba(151, 244, 253, 0.15) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 12px rgba(151, 244, 253, 0.15) !important;
 }
 
-/* --- 3. BACKGROUND GLOBAL E EFEITOS DE FUNDO ULTRA-ESCURO --- */
+/* --- 3. BACKGROUND GLOBAL ULTRA-ESCURO --- */
 body.terminal-mode, body.terminal-mode main, body.terminal-mode .chat-window, 
 body.terminal-mode .main-content, body.terminal-mode header,
 body.terminal-mode .conversation-container, body.terminal-mode .response-container,
@@ -156,15 +158,17 @@ body.terminal-mode *, body.terminal-mode span, body.terminal-mode p {
     text-shadow: 0 0 2px rgba(151, 244, 253, 0.4) !important; 
 }
 
-/* BARRA DE PROMPT INFERIOR (EMOLDURADA EM VERDE NEON #42f639) */
+/* BARRA DE PROMPT INFERIOR (GLASSMORPHISM + VERDE NEON #42f639) */
 body.terminal-mode .input-area-container,
 body.terminal-mode fieldset.input-area-container,
 body.terminal-mode .text-input-field,
 body.terminal-mode .input-area { 
-    background-color: #020805 !important; 
+    background: rgba(2, 12, 8, 0.82) !important; 
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
     border: 1.5px solid #42f639 !important;
-    border-radius: 12px !important;
-    box-shadow: 0 0 15px rgba(66, 246, 57, 0.25), inset 0 0 8px rgba(66, 246, 57, 0.1) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 25px rgba(66, 246, 57, 0.25), inset 0 0 15px rgba(66, 246, 57, 0.08) !important;
 }
 
 body.terminal-mode .input-area-container {
@@ -178,19 +182,50 @@ body.terminal-mode div[role="textbox"] {
     text-shadow: 0 0 4px rgba(151, 244, 253, 0.6) !important;
 }
 
-/* --- 3.1 BLOCO DE CÓDIGO CENTRAL (DESTAQUE DRAMÁTICO & SINTAXE) --- */
+/* --- 3.1 BLOCO DE CÓDIGO E EMBED (GLASSMORPHISM DRAMÁTICO) --- */
 body.terminal-mode pre, 
-body.terminal-mode code, 
+body.terminal-mode code-block,
 body.terminal-mode .code-block, 
 body.terminal-mode .formatted-code-block-internal-container { 
-    background-color: #010a08 !important; 
-    border: 1.5px solid rgba(66, 246, 57, 0.5) !important;
-    border-radius: 10px !important;
-    box-shadow: 0 0 20px rgba(66, 246, 57, 0.15), inset 0 0 12px rgba(0, 0, 0, 0.8) !important;
+    background: rgba(1, 12, 10, 0.88) !important; 
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1.5px solid rgba(66, 246, 57, 0.45) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(66, 246, 57, 0.08) !important;
     color: #80f387 !important;
 }
 
-/* Sintaxe SQL & Código */
+body.terminal-mode pre code {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #80f387 !important;
+}
+
+/* --- 3.2 CRÍTICO: ÍCONES/TAGS INLINE E CRACHÁS (icon-192.png, apple-icon.png, etc.) --- */
+body.terminal-mode code:not(pre code),
+body.terminal-mode p code,
+body.terminal-mode li code,
+body.terminal-mode span[class*="citation"],
+body.terminal-mode .md-content code {
+    background: rgba(66, 246, 57, 0.08) !important;
+    border: 1px solid rgba(66, 246, 57, 0.35) !important;
+    border-radius: 4px !important;
+    padding: 2px 7px !important;
+    margin: 0 3px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    line-height: 1.2 !important;
+    font-size: 0.88em !important;
+    color: #42f639 !important;
+    text-shadow: 0 0 4px rgba(66, 246, 57, 0.6) !important;
+    box-shadow: 0 0 8px rgba(66, 246, 57, 0.1) !important;
+}
+
+/* Sintaxe SQL & Código em Destaque */
 body.terminal-mode .hljs-keyword,
 body.terminal-mode .token.keyword,
 body.terminal-mode code .keyword {
@@ -218,12 +253,12 @@ body.terminal-mode .token.comment {
 }
 
 body.terminal-mode .code-block-decoration { 
-    background-color: #010a08 !important; 
+    background: rgba(1, 12, 10, 0.95) !important; 
     color: #42f639 !important; 
     border-bottom: 1px solid rgba(66, 246, 57, 0.3) !important;
 }
 
-/* --- 4. SIDEBAR E TOOLTIPS (PALETA REFINADA) --- */
+/* --- 4. SIDEBAR E TOOLTIPS (GLASSMORPHISM REFINADO) --- */
 body.terminal-mode bard-sidenav,
 body.terminal-mode side-navigation-content,
 body.terminal-mode .sidenav-with-history-container,
@@ -231,21 +266,28 @@ body.terminal-mode .overflow-container,
 body.terminal-mode .side-nav-entry-container,
 body.terminal-mode .bot-list-item--expanded,
 body.terminal-mode .conversation-items-container {
-    background-color: #010608 !important;
+    background-color: rgba(1, 6, 9, 0.88) !important;
+    backdrop-filter: blur(14px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+    border-right: 1px solid rgba(151, 244, 253, 0.12) !important;
 }
 
 /* Títulos de seção ("Gems", "Notebooks", "Recentes") em Vermelho Profundo #b13124 */
+body.terminal-mode bard-sidenav .expandable-section-title,
 body.terminal-mode bard-sidenav h1,
 body.terminal-mode bard-sidenav .title-container,
 body.terminal-mode bard-sidenav .section-header,
 body.terminal-mode bard-sidenav [data-test-id*="title"] {
     color: #b13124 !important;
     text-shadow: 0 0 6px rgba(177, 49, 36, 0.6) !important;
-    font-weight: bold !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
 }
 
 /* Ícones principais em Amarelo Brilhante #fbe32d */
 body.terminal-mode bard-sidenav mat-icon,
+body.terminal-mode bard-sidenav gem-icon,
 body.terminal-mode bard-sidenav .google-symbols,
 body.terminal-mode .main-menu-button mat-icon,
 body.terminal-mode side-nav-menu-button mat-icon {
@@ -254,7 +296,8 @@ body.terminal-mode side-nav-menu-button mat-icon {
 }
 
 /* Texto de menu / itens em Ciano Brilhante #97f4fd sem sublinhado */
-body.terminal-mode bard-sidenav span,
+body.terminal-mode bard-sidenav .title-text,
+body.terminal-mode bard-sidenav span:not(.expandable-section-title),
 body.terminal-mode bard-sidenav a,
 body.terminal-mode bard-sidenav .conversation-title,
 body.terminal-mode bard-sidenav .bot-name,
@@ -264,20 +307,33 @@ body.terminal-mode bard-sidenav .title-container div {
     text-decoration: none !important;
 }
 
-/* Hover e estados ativos */
+/* Hover e estados ativos na Sidebar */
 body.terminal-mode bard-sidenav .conversation:hover,
-body.terminal-mode bard-sidenav .conversation.selected,
 body.terminal-mode bard-sidenav .bot-item:hover,
 body.terminal-mode bard-sidenav side-nav-action-button a:hover,
-body.terminal-mode bard-sidenav side-nav-entry-button a:hover {
-    background-color: rgba(151, 244, 253, 0.1) !important;
-    box-shadow: 0 0 8px rgba(151, 244, 253, 0.2) !important;
+body.terminal-mode bard-sidenav side-nav-entry-button a:hover,
+body.terminal-mode bard-sidenav gem-nav-list-item a:hover {
+    background-color: rgba(151, 244, 253, 0.08) !important;
+    box-shadow: 0 0 8px rgba(151, 244, 253, 0.15) !important;
+    border-radius: 6px !important;
+}
+
+/* Item Ativo/Selecionado com Destaque Neon */
+body.terminal-mode bard-sidenav .project-sidenav-list-item--selected,
+body.terminal-mode bard-sidenav .is-active,
+body.terminal-mode bard-sidenav .mdc-list-item--activated,
+body.terminal-mode bard-sidenav .conversation.selected {
+    background: rgba(151, 244, 253, 0.12) !important;
+    border-left: 3px solid #97f4fd !important;
+    border-radius: 6px !important;
+    box-shadow: inset 0 0 12px rgba(151, 244, 253, 0.15), 0 0 10px rgba(151, 244, 253, 0.2) !important;
 }
 
 /* Tooltips Terminais */
 body.terminal-mode .mat-mdc-tooltip .mdc-tooltip__surface, 
 body.terminal-mode .mdc-tooltip__surface { 
-    background-color: #020b0e !important; 
+    background: rgba(2, 11, 14, 0.95) !important; 
+    backdrop-filter: blur(10px) !important;
     color: #97f4fd !important; 
     border: 1px solid #42f639 !important;
     font-family: 'Courier New', monospace !important;
@@ -285,8 +341,14 @@ body.terminal-mode .mdc-tooltip__surface {
 }
 
 /* --- 5. LOGO E MENU --- */
-body.terminal-mode .bard-text { visibility: hidden !important; white-space: nowrap !important; }
-body.terminal-mode .bard-text::after { 
+body.terminal-mode .bard-text,
+body.terminal-mode .gemini-sidenav-text { 
+    visibility: hidden !important; 
+    white-space: nowrap !important; 
+}
+
+body.terminal-mode .bard-text::after,
+body.terminal-mode .gemini-sidenav-text::after { 
     content: 'terminal code.' !important; 
     visibility: visible !important; 
     position: absolute; left: 0; top: 0; 
