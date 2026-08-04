@@ -96,6 +96,7 @@ body.terminal-mode .structured-content-container,
 body.terminal-mode .main-content,
 body.terminal-mode .chat-history-scroll-container,
 body.terminal-mode .chat-history,
+body.terminal-mode user-query,
 body.full-width-mode .chat-window-content, 
 body.full-width-mode .conversation-container, 
 body.full-width-mode .user-query-container, 
@@ -106,6 +107,31 @@ body.full-width-mode .chat-history-scroll-container,
 body.full-width-mode .chat-history { 
     max-width: 98% !important; 
     width: 98% !important; 
+    margin-left: 0 !important; 
+}
+
+/* Garante que o scroll funcione nos containers principais */
+body.terminal-mode .chat-history-scroll-container,
+body.terminal-mode .conversation-container,
+body.full-width-mode .chat-history-scroll-container,
+body.full-width-mode .conversation-container {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-y: auto !important;
+}
+
+/* Estilização Terminal para Scrollbars */
+body.terminal-mode ::-webkit-scrollbar {
+    width: 10px !important;
+    background: #021114 !important;
+}
+body.terminal-mode ::-webkit-scrollbar-thumb {
+    background: #00e5ff !important;
+    border: 2px solid #021114 !important;
+    box-shadow: 0 0 5px #00e5ff !important;
+}
+body.terminal-mode ::-webkit-scrollbar-corner {
+    background: #021114 !important;
 }
 
 body.terminal-mode .markdown-main-panel, 
@@ -172,6 +198,10 @@ body.terminal-mode .input-area {
 }
 
 body.terminal-mode .input-area-container {
+    background-color: #021114 !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
     padding: 8px !important;
     margin-bottom: 30px !important;
 }
@@ -260,6 +290,10 @@ body.terminal-mode .code-block-decoration {
 
 /* --- 4. SIDEBAR E TOOLTIPS (GLASSMORPHISM REFINADO) --- */
 body.terminal-mode bard-sidenav,
+body.terminal-mode side-navigation-v2 {
+    /* Largura original restaurada */
+}
+
 body.terminal-mode side-navigation-content,
 body.terminal-mode .sidenav-with-history-container,
 body.terminal-mode .overflow-container,
@@ -366,4 +400,13 @@ body.terminal-mode .gemini-sidenav-text::after {
   15% { opacity: 0.55; }
   20% { opacity: 0.58; }
   100% { opacity: 0.57; }
+}
+
+/* Ocultar degradês de rolagem nativos do Gemini */
+body.terminal-mode .top-gradient-container,
+body.terminal-mode .top-gradient,
+body.terminal-mode .bottom-gradient-container,
+body.terminal-mode .bottom-gradient {
+    display: none !important;
+    background: none !important;
 }

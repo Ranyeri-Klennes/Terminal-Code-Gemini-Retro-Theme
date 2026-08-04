@@ -90,7 +90,13 @@ function createLoader() {
                 setTimeout(() => loader.remove(), 400);
             }, 500); // Reduzido para 0.5s para ser mais ágil
         }
-    }, 500);
+    }, 100);
+
+    // Timeout de segurança: remove o loader após 5 segundos independente do estado
+    setTimeout(() => {
+        clearInterval(checkReady);
+        if (loader.parentNode) loader.remove();
+    }, 5000);
 }
 
 function injectDynamicStyles() {
@@ -114,9 +120,15 @@ function startObserver() {
         if (!document.body.classList.contains('terminal-mode')) return;
 
         // Logo e Footer agora controlados via CSS ou removidos do observer para performance
-        const footerText = document.querySelector('.disclaimer-text, div[class*="disclaimer"]');
-        if (footerText && footerText.textContent !== 'Feito é Melhor que Perfeito!') {
-            footerText.textContent = 'Feito é Melhor que Perfeito!';
+        const footerText = document.querySelector('.disclaimer-text, [class*="disclaimer"]');
+        if (footerText) {
+            footerText.style.setProperty('width', '100%', 'important');
+            footerText.style.setProperty('max-width', '100%', 'important');
+            footerText.style.setProperty('padding', '0', 'important');
+            const desiredHTML = `<div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 40px; box-sizing: border-box;"><span>Feito é Melhor que Perfeito!</span><span>Desenvolvido com ☕ por <a href="https://portfolio-ranyeri-klennes.vercel.app/" target="_blank" style="color: #00e5ff !important; text-decoration: underline !important;">Ranyeri Klennes.</a></span></div>`;
+            if (footerText.innerHTML !== desiredHTML) {
+                footerText.innerHTML = desiredHTML;
+            }
         }
 
         document.querySelectorAll('[data-placeholder], rich-textarea').forEach(el => {
