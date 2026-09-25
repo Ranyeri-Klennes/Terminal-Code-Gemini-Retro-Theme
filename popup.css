@@ -1,137 +1,204 @@
 /* --- TERMINAL CODE CLEAN RETRO (POPUP) --- */
 body {
-  width: 320px;
+  width: 310px;
   margin: 0;
-  padding: 20px;
-  background-color: #050a0a; /* Darker, slightly tinted background */
+  padding: 16px 18px 14px 18px;
+  background-color: #020c0e;
   color: #00e5ff;
-  font-family: 'Inter', 'Segoe UI', 'Courier New', monospace; /* Modern with fallback */
-  font-size: 13px;
+  font-family: 'Consolas', 'Fira Code', 'Courier New', Monaco, monospace;
+  font-size: 12px;
   user-select: none;
+  box-sizing: border-box;
 }
 
 .terminal-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 header {
-  border-bottom: 2px solid #00e5ff;
-  padding-bottom: 10px;
-  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+  padding-bottom: 8px;
 }
 
 .brand {
-  font-family: 'Courier New', monospace;
-  font-weight: 900;
-  font-size: 18px;
-  letter-spacing: -1px;
+  font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
   color: #00e5ff;
   display: flex;
   align-items: center;
   gap: 8px;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.4);
 }
 
 .brand::before {
   content: '';
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   background: #00e5ff;
-  box-shadow: 0 0 10px #00e5ff;
+  box-shadow: 0 0 8px #00e5ff;
   display: block;
 }
 
 .control-group {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 11px;
 }
 
 .control-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 28px;
 }
 
 .label {
   text-transform: uppercase;
   font-size: 11px;
-  letter-spacing: 1.5px;
-  opacity: 0.7;
-  font-weight: 600;
+  letter-spacing: 1px;
+  opacity: 0.75;
+  font-weight: 500;
+  color: #00e5ff;
 }
 
-/* RETRO TOGGLE BUTTON */
+/* RETRO BUTTONS */
 .retro-btn {
-  background: transparent;
+  background: rgba(0, 229, 255, 0.02);
   color: #00e5ff;
-  border: 1px solid rgba(0, 229, 255, 0.4);
-  padding: 6px 12px;
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 3px;
+  padding: 4px 10px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 11.5px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 80px;
+  transition: all 0.18s ease;
+  min-width: 68px;
   text-align: center;
+  line-height: 1.2;
 }
 
 .retro-btn:hover {
-  border-color: #00e5ff;
-  background: rgba(0, 229, 255, 0.05);
+  border-color: rgba(0, 229, 255, 0.8);
+  background: rgba(0, 229, 255, 0.08);
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.2);
 }
 
 .retro-btn.active {
-  background: rgba(0, 229, 255, 0.1);
-  border-color: #00ff00;
-  color: #00ff00;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.1);
+  background: rgba(0, 229, 255, 0.12);
+  border-color: #00e5ff;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
 }
 
 /* FONT CONTROLS */
 .font-stepper {
   display: flex;
   align-items: center;
-  border: 1px solid rgba(0, 229, 255, 0.2);
-  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 3px;
   overflow: hidden;
+  background: rgba(0, 229, 255, 0.02);
+  height: 26px;
 }
 
 .step-btn {
-  background: rgba(0, 229, 255, 0.05);
+  background: transparent;
   border: none;
   color: #00e5ff;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 100%;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: background 0.15s ease, color 0.15s ease;
+  padding: 0;
 }
 
 .step-btn:hover {
   background: rgba(0, 229, 255, 0.15);
+  color: #ffffff;
 }
 
 #font-size-display {
-  width: 50px;
+  width: 44px;
   text-align: center;
-  font-family: 'Courier New', monospace;
+  font-family: 'Consolas', 'Courier New', monospace;
   font-weight: bold;
-  font-size: 14px;
-  border-left: 1px solid rgba(0, 229, 255, 0.1);
-  border-right: 1px solid rgba(0, 229, 255, 0.1);
+  font-size: 12px;
+  border-left: 1px solid rgba(0, 229, 255, 0.15);
+  border-right: 1px solid rgba(0, 229, 255, 0.15);
+  line-height: 24px;
+  color: #00e5ff;
+}
+
+/* READER GROUP */
+.reader-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.reader-main-btn {
+  min-width: 66px;
+  padding: 4px 6px;
+}
+
+.reader-main-btn.playing {
+  border-color: #00ffaa;
+  color: #00ffaa;
+  background: rgba(0, 255, 170, 0.12);
+  box-shadow: 0 0 8px rgba(0, 255, 170, 0.3);
+}
+
+.reader-nav-btn {
+  min-width: unset;
+  padding: 4px 5px;
+  font-size: 11px;
+}
+
+.reader-nav-btn:hover {
+  border-color: rgba(0, 229, 255, 0.9);
+  background: rgba(0, 229, 255, 0.12);
+}
+
+.reader-icon-btn {
+  min-width: unset;
+  padding: 4px 5px;
+  font-size: 10px;
+}
+
+.reader-icon-btn:hover {
+  border-color: #ff5577;
+  color: #ff5577;
+  background: rgba(255, 85, 119, 0.1);
+}
+
+.reader-rate-btn {
+  min-width: unset;
+  padding: 4px 5px;
+  font-size: 11px;
+  opacity: 0.85;
 }
 
 /* FOOTER */
 footer {
-  margin-top: 10px;
+  margin-top: 4px;
   font-size: 9px;
   text-align: center;
-  opacity: 0.3;
-  letter-spacing: 2px;
+  opacity: 0.4;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
+  transition: opacity 0.2s ease;
+}
+
+footer:hover {
+  opacity: 0.8;
 }

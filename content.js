@@ -190,3 +190,353 @@ async function forceNativeDarkMode() {
 }
 
 loadConfig();
+
+// ==========================================
+// LEITOR DE VOZ RETRO TERMINAL (TTS)
+// ==========================================
+
+let readerBlocks = [];
+let readerCurrentIndex = 0;
+let readerIsPlaying = false;
+let readerIsPaused = false;
+let readerRate = 1.25;
+let cachedVoices = [];
+let currentUtteranceSession = 0;
+
+function loadReaderVoices() {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        cachedVoices = window.speechSynthesis.getVoices();
+    }
+}
+
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    loadReaderVoices();
+    window.speechSynthesis.onvoiceschanged = () => {
+        loadReaderVoices();
+    };
+}
+
+// Seleciona a melhor voz natural pt-BR disponível
+function getBestVoice() {
+    if (!cachedVoices.length) {
+        loadReaderVoices();
+    }
+    const voices = cachedVoices;
+    if (!voices.length) return null;
+
+    // 1. Google Português do Brasil (Chrome Neural TTS)
+    const googlePtBr = voices.find(v => {
+        const lang = v.lang.toLowerCase().replace('_', '-');
+        const name = v.name.toLowerCase();
+        return lang === 'pt-br' && (name.includes('google') || name.includes('brasil'));
+    });
+    if (googlePtBr) return googlePtBr;
+
+    // 2. Natural / Neural / Online pt-BR
+    const neuralPtBr = voices.find(v => {
+        const lang = v.lang.toLowerCase().replace('_', '-');
+        const name = v.name.toLowerCase();
+        return lang === 'pt-br' && (name.includes('natural') || name.includes('neural') || name.includes('online'));
+    });
+    if (neuralPtBr) return neuralPtBr;
+
+    // 3. Qualquer voz pt-BR
+    const anyPtBr = voices.find(v => v.lang.toLowerCase().replace('_', '-') === 'pt-br');
+    if (anyPtBr) return anyPtBr;
+
+    // 4. Qualquer voz em português
+    const anyPt = voices.find(v => v.lang.toLowerCase().startsWith('pt'));
+    if (anyPt) return anyPt;
+
+    return voices[0];
+}
+
+// Extrai blocos legíveis de mensagens do Gemini (ou página atual) de forma estrita e sem repetições
+function parseReaderBlocks() {
+    const blocks = [];
+    let blockId = 0;
+    const processedElements = new Set();
+
+    // 1. Seletores específicos de folhas de texto no Gemini (evita selecionar containers pai e filhos simultaneamente)
+    const candidateNodes = document.querySelectorAll(
+        'message-content p, message-content pre, message-content li, message-content blockquote, ' +
+        'message-content h1, message-content h2, message-content h3, message-content h4, ' +
+        '.markdown-main-panel p, .markdown-main-panel pre, .markdown-main-panel li, ' +
+        '.model-response-text p, .model-response-text li, ' +
+        'user-query-content p, .query-content p, .user-query-container p'
+    );
+
+    let candidates = Array.from(candidateNodes);
+
+    // Fallback para artigos ou outras páginas genéricas
+    if (candidates.length === 0) {
+        const root = document.querySelector('article, main, [role="main"]') || document.body;
+        candidates = Array.from(root.querySelectorAll('p, pre, li, blockquote, h1, h2, h3, h4, h5, h6'));
+    }
+
+    candidates.forEach(el => {
+        if (processedElements.has(el)) return;
+        if (el.closest('header, footer, nav, aside, .cdk-overlay-container, .response-container-footer, message-actions, bot-banner')) return;
+
+        // Se for um container que possui parágrafos ou itens filhos, não adiciona o pai como bloco duplicado
+        if (el.querySelector('p, pre, li, blockquote, h1, h2, h3, h4')) return;
+
+        // Bloco de código
+        const isPre = el.tagName.toLowerCase() === 'pre';
+        const isCode = el.tagName.toLowerCase() === 'code';
+        if (isPre || (isCode && el.parentElement?.tagName.toLowerCase() === 'pre')) {
+            const codeEl = isPre ? el : el.closest('pre');
+            if (processedElements.has(codeEl)) return;
+
+            const codeText = (codeEl.textContent || '').trim();
+            if (codeText.length > 5) {
+                blocks.push({
+                    id: blockId++,
+                    type: 'code',
+                    text: 'Trecho de código ignorado.',
+                    element: codeEl
+                });
+            }
+            processedElements.add(codeEl);
+            codeEl.querySelectorAll('*').forEach(c => processedElements.add(c));
+            return;
+        }
+
+        if (el.closest('pre')) return;
+
+        const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+        if (text.length >= 2) {
+            // Evita adicionar blocos consecutivos com texto idêntico
+            if (blocks.length > 0 && blocks[blocks.length - 1].text === text) {
+                return;
+            }
+
+            blocks.push({
+                id: blockId++,
+                type: 'text',
+                text: text,
+                element: el
+            });
+            processedElements.add(el);
+            el.querySelectorAll('*').forEach(c => processedElements.add(c));
+        }
+    });
+
+    return blocks;
+}
+
+// Localiza o primeiro bloco visível na área de visualização atual (viewport)
+function findFirstVisibleReaderBlockIndex() {
+    if (readerBlocks.length === 0) return 0;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    for (let i = 0; i < readerBlocks.length; i++) {
+        const el = readerBlocks[i].element;
+        if (!el) continue;
+        const rect = el.getBoundingClientRect();
+        if ((rect.top >= 0 && rect.top < viewportHeight * 0.8) || (rect.top < 0 && rect.bottom > 60)) {
+            return i;
+        }
+    }
+    return 0;
+}
+
+function removeReaderHighlight() {
+    document.querySelectorAll('.terminal-reading-highlight').forEach(el => {
+        el.classList.remove('terminal-reading-highlight');
+    });
+}
+
+function applyReaderHighlight(element) {
+    removeReaderHighlight();
+    if (element) {
+        element.classList.add('terminal-reading-highlight');
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+function broadcastReaderStatus() {
+    try {
+        chrome.runtime.sendMessage({
+            type: 'READER_STATUS_UPDATE',
+            payload: {
+                isPlaying: readerIsPlaying,
+                isPaused: readerIsPaused,
+                rate: readerRate
+            }
+        });
+    } catch (_) {}
+}
+
+function speakCurrentReaderBlock() {
+    // Incrementa a sessão para invalidar callbacks assíncronos de blocos cancelados
+    currentUtteranceSession++;
+    const session = currentUtteranceSession;
+
+    if (readerCurrentIndex >= readerBlocks.length || readerCurrentIndex < 0) {
+        readerIsPlaying = false;
+        readerIsPaused = false;
+        removeReaderHighlight();
+        broadcastReaderStatus();
+        return;
+    }
+
+    const block = readerBlocks[readerCurrentIndex];
+    if (!block || !block.text) {
+        readerCurrentIndex++;
+        speakCurrentReaderBlock();
+        return;
+    }
+
+    applyReaderHighlight(block.element);
+
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+        window.speechSynthesis.cancel();
+    }
+
+    // Delay para garantir que o cancelamento anterior foi processado pelo motor do navegador
+    setTimeout(() => {
+        if (session !== currentUtteranceSession) return;
+
+        const utterance = new SpeechSynthesisUtterance(block.text);
+        utterance.lang = 'pt-BR';
+        utterance.rate = readerRate;
+        utterance.pitch = 1.0;
+
+        const voice = getBestVoice();
+        if (voice) utterance.voice = voice;
+
+        utterance.onstart = () => {
+            if (session !== currentUtteranceSession) return;
+            readerIsPlaying = true;
+            readerIsPaused = false;
+            broadcastReaderStatus();
+        };
+
+        utterance.onend = () => {
+            if (session !== currentUtteranceSession) return;
+            readerCurrentIndex++;
+            if (readerCurrentIndex < readerBlocks.length && readerIsPlaying) {
+                speakCurrentReaderBlock();
+            } else {
+                readerIsPlaying = false;
+                readerIsPaused = false;
+                removeReaderHighlight();
+                broadcastReaderStatus();
+            }
+        };
+
+        utterance.onerror = (e) => {
+            if (session !== currentUtteranceSession) return;
+            if (e.error === 'interrupted' || e.error === 'canceled') return;
+            console.warn('[Terminal Code Reader] Speech error:', e);
+            readerCurrentIndex++;
+            if (readerCurrentIndex < readerBlocks.length && readerIsPlaying) {
+                speakCurrentReaderBlock();
+            } else {
+                readerIsPlaying = false;
+                readerIsPaused = false;
+                removeReaderHighlight();
+                broadcastReaderStatus();
+            }
+        };
+
+        window.speechSynthesis.resume();
+        window.speechSynthesis.speak(utterance);
+        readerIsPlaying = true;
+        readerIsPaused = false;
+        broadcastReaderStatus();
+    }, 50);
+}
+
+// Carrega velocidade configurada
+chrome.storage.local.get(['g_readerRate'], (res) => {
+    if (res.g_readerRate) readerRate = res.g_readerRate;
+});
+
+// Listener de mensagens da extensão
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (!message || !message.type) return;
+
+    switch (message.type) {
+        case 'READER_GET_STATUS': {
+            sendResponse({
+                isPlaying: readerIsPlaying,
+                isPaused: readerIsPaused,
+                rate: readerRate
+            });
+            break;
+        }
+        case 'READER_PLAY': {
+            if (message.payload?.rate) {
+                readerRate = message.payload.rate;
+            }
+            if (readerIsPaused) {
+                window.speechSynthesis.resume();
+                readerIsPlaying = true;
+                readerIsPaused = false;
+            } else {
+                readerBlocks = parseReaderBlocks();
+                readerCurrentIndex = findFirstVisibleReaderBlockIndex();
+                speakCurrentReaderBlock();
+            }
+            sendResponse({ isPlaying: readerIsPlaying, isPaused: readerIsPaused, rate: readerRate });
+            break;
+        }
+        case 'READER_PAUSE': {
+            window.speechSynthesis.pause();
+            readerIsPlaying = true;
+            readerIsPaused = true;
+            sendResponse({ isPlaying: readerIsPlaying, isPaused: readerIsPaused, rate: readerRate });
+            break;
+        }
+        case 'READER_STOP': {
+            currentUtteranceSession++;
+            window.speechSynthesis.cancel();
+            readerIsPlaying = false;
+            readerIsPaused = false;
+            readerCurrentIndex = 0;
+            removeReaderHighlight();
+            sendResponse({ isPlaying: readerIsPlaying, isPaused: readerIsPaused, rate: readerRate });
+            break;
+        }
+        case 'READER_PREV': {
+            if (message.payload?.rate) {
+                readerRate = message.payload.rate;
+            }
+            if (readerBlocks.length === 0) {
+                readerBlocks = parseReaderBlocks();
+                readerCurrentIndex = findFirstVisibleReaderBlockIndex();
+            }
+            readerCurrentIndex = Math.max(0, readerCurrentIndex - 1);
+            speakCurrentReaderBlock();
+            sendResponse({ isPlaying: readerIsPlaying, isPaused: readerIsPaused, rate: readerRate });
+            break;
+        }
+        case 'READER_NEXT': {
+            if (message.payload?.rate) {
+                readerRate = message.payload.rate;
+            }
+            if (readerBlocks.length === 0) {
+                readerBlocks = parseReaderBlocks();
+                readerCurrentIndex = findFirstVisibleReaderBlockIndex();
+            } else if (readerCurrentIndex < readerBlocks.length - 1) {
+                readerCurrentIndex++;
+            }
+            speakCurrentReaderBlock();
+            sendResponse({ isPlaying: readerIsPlaying, isPaused: readerIsPaused, rate: readerRate });
+            break;
+        }
+        case 'READER_SET_RATE': {
+            if (message.payload?.rate) {
+                readerRate = message.payload.rate;
+                if (readerIsPlaying && !readerIsPaused) {
+                    speakCurrentReaderBlock();
+                }
+            }
+            sendResponse({ isPlaying: readerIsPlaying, isPaused: readerIsPaused, rate: readerRate });
+            break;
+        }
+    }
+    return true;
+});

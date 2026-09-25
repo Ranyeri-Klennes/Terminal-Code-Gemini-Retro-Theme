@@ -3,7 +3,9 @@
   "name": "Terminal Code",
   "version": "1.4",
   "permissions": [
-    "storage"
+    "storage",
+    "activeTab",
+    "scripting"
   ],
   "action": {
     "default_popup": "popup.html",
